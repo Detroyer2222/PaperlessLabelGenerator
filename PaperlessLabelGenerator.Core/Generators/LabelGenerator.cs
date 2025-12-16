@@ -16,13 +16,16 @@ public class LabelDocumentGenerator : ILabelDocumentGenerator
                 container.Page(page =>
                 {
                     page.Size(PageSizes.A4);
+
+                    // Use margins defined by the specific label design
                     page.MarginHorizontal(design.PageMarginSideMm, Unit.Millimetre);
                     page.MarginVertical(design.PageMarginTopBottomMm, Unit.Millimetre);
+
                     page.PageColor(Colors.White);
 
                     page.Content().Table(table =>
                     {
-                        // Define columns and gutters explicitly
+                        // 1. Define Columns (Content + Spacers)
                         table.ColumnsDefinition(columns =>
                         {
                             for (var i = 0; i < design.ColumnsPerRow; i++)
@@ -30,8 +33,8 @@ public class LabelDocumentGenerator : ILabelDocumentGenerator
                                 // Content column
                                 columns.RelativeColumn();
 
-                                // Add spacer column AFTER every column except the last one
-                                if (i < design.ColumnsPerRow - 1)
+                                // Horizontal Spacer (Gutter)
+                                if (i < design.ColumnsPerRow - 1 && design.HorizontalSpacingMm > 0)
                                 {
                                     columns.ConstantColumn(design.HorizontalSpacingMm, Unit.Millimetre);
                                 }
@@ -41,33 +44,42 @@ public class LabelDocumentGenerator : ILabelDocumentGenerator
                         var labelList = labels.ToList();
                         var index = 0;
 
+                        // 2. Iterate Rows
                         for (var row = 0; row < design.RowsPerSheet; row++)
                         {
+                            // 2a. Iterate Columns
                             for (var col = 0; col < design.ColumnsPerRow; col++)
                             {
-                                // 1. Determine label text
                                 var labelText = index < labelList.Count ? labelList[index] : string.Empty;
 
-                                // 2. Render the label cell
                                 table.Cell().Element(cell =>
                                 {
-                                    // Ensure exact height constraint per row
-                                    // 10mm height per row (Avery L4731)
-                                    cell.Height(10, Unit.Millimetre).Element(c => design.ComposeLabel(c, labelText));
+                                    // GENERALIZED: Use design.LabelHeightMm instead of hardcoded 10
+                                    cell.Height(design.LabelHeightMm, Unit.Millimetre)
+                                        .Element(c => design.ComposeLabel(c, labelText));
                                 });
 
-                                // 3. Add spacer cell if this isn't the last column
-                                if (col < design.ColumnsPerRow - 1)
+                                // Horizontal Spacer Cell
+                                if (col < design.ColumnsPerRow - 1 && design.HorizontalSpacingMm > 0)
                                 {
-                                    // Empty cell for the 2mm gutter
-                                    table.Cell();
+                                    table.Cell(); // Empty cell for spacing
                                 }
 
                                 index++;
                             }
 
-                            // If there is vertical spacing (e.g. 0mm), it's handled here. 
-                            // Since it's 0mm for this format, we don't need a spacer row.
+                            // 3. Vertical Spacer Row (after every row except the last one)
+                            if (row < design.RowsPerSheet - 1 && design.VerticalSpacingMm > 0)
+                            {
+                                // Add a full row of empty cells to create vertical gap
+                                var totalTableCols = design.ColumnsPerRow + (design.ColumnsPerRow - 1);
+
+
+                                for (var k = 0; k < totalTableCols; k++)
+                                {
+                                    table.Cell().Height(design.VerticalSpacingMm, Unit.Millimetre);
+                                }
+                            }
                         }
                     });
                 });

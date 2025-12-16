@@ -9,8 +9,8 @@ public class AveryL4731LabelDesign : ILabelDesign
 {
     public string FormatId => "avery-l4731";
     public string FormatName => "Avery Zweckform L4731 (25.4 x 10 mm)";
-
-    // Page Layout (Fixed to keep 27 rows on one page)
+    public float LabelWidthMm => 25.4f;
+    public float LabelHeightMm => 10.0f;
     public float PageMarginTopBottomMm => 13.5f;
     public float PageMarginSideMm => 9.0f;
     public int ColumnsPerRow => 7;
@@ -36,10 +36,8 @@ public class AveryL4731LabelDesign : ILabelDesign
             // Text (Right)
             row.RelativeItem()
                 .AlignMiddle()
-                // 3. ZERO padding between QR and Text container
-                // Using AlignLeft to pull text closer to QR, instead of Center
                 .AlignLeft()
-                .PaddingLeft(0.5f, Unit.Millimetre) // Tiny gap from QR edge
+                .PaddingLeft(0.5f, Unit.Millimetre)
                 .Text(labelText ?? "")
                 .FontSize(fontSize)
                 .FontColor(Colors.Black)

@@ -5,10 +5,8 @@ using Scalar.AspNetCore;
 
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
-// Set QuestPDF License (Community)
 QuestPDF.Settings.License = LicenseType.Community;
 
-// Add services
 builder.Services.AddControllers();
 builder.Services.AddOpenApi();
 builder.Services.AddLogging(config =>
@@ -17,7 +15,6 @@ builder.Services.AddLogging(config =>
     config.AddDebug();
 });
 
-// In Program.cs
 builder.Services.AddScoped<ILabelDesignFactory, LabelDesignFactory>()
     .AddScoped<ILabelDocumentGenerator, LabelDocumentGenerator>();
 
@@ -32,10 +29,8 @@ WebApplication app = builder.Build();
 // Configure middleware
 if (app.Environment.IsDevelopment())
 {
-    // Enable OpenAPI endpoint at /openapi/v1.json
     app.MapOpenApi();
 
-    // Map Scalar API reference UI at root path
     app.MapScalarApiReference(options =>
     {
         options

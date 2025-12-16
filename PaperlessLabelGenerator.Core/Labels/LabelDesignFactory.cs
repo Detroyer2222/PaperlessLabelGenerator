@@ -19,12 +19,6 @@ public class LabelDesignFactory : ILabelDesignFactory
         return format switch
         {
             LabelFormat.AveryL4731 => new AveryL4731LabelDesign(),
-
-            // Future label formats can be added here easily.
-            // For example:
-            // LabelFormat.AveryL7651 => new AveryL7651LabelDesign(),
-
-            // The underscore is a catch-all for any unsupported enum values
             _ => throw new ArgumentOutOfRangeException(nameof(format), format, "Unsupported label format.")
         };
     }
@@ -35,8 +29,6 @@ public class LabelDesignFactory : ILabelDesignFactory
     /// <returns>An enumerable of all supported LabelFormat values.</returns>
     public IEnumerable<LabelFormat> GetAvailableFormats()
     {
-        // This dynamically returns all defined values in the enum.
-        // If you add a new format to the enum, it's automatically included here.
         return Enum.GetValues<LabelFormat>();
     }
 
@@ -46,8 +38,6 @@ public class LabelDesignFactory : ILabelDesignFactory
     /// <returns>An enumerable of tuples containing the format enum and its name.</returns>
     public IEnumerable<(LabelFormat Format, string Name)> GetAvailableFormatsWithNames()
     {
-        // Iterate over all available enum values, create a temporary instance for each,
-        // and get its friendly name.
         return GetAvailableFormats().Select(format =>
         {
             ILabelDesign design = Create(format);

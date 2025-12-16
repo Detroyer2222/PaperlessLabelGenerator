@@ -2,7 +2,6 @@
 using PaperlessLabelGenerator.Contracts;
 using PaperlessLabelGenerator.Core.Generators;
 using PaperlessLabelGenerator.Core.Labels;
-// Remove unused namespace imports if necessary
 
 namespace PaperlessLabelGenerator.Api.Controllers;
 
@@ -24,19 +23,12 @@ public sealed class LabelsController : ControllerBase
     [HttpPost]
     public async Task<IActionResult> GenerateAsync([FromBody] GenerateLabelsRequest request)
     {
-        // 1. Get Design
         ILabelDesign design = _labelDesignFactory.Create(request.Format);
 
-        // 2. Fix: Use PROPERTIES, not methods
         var capacity = design.ColumnsPerRow * design.RowsPerSheet;
 
         var labels = new List<string>(capacity);
 
-        // 3. Number Formatting
-        // Note: Check if your DTO property is named 'LeadingZeros' or 'numberOfDigits'.
-        // Based on your previous code it was LeadingZeros, but your snippet uses numberOfDigits.
-        // I will use 'LeadingZeros' to match the standard we set.
-        // Update this to 'request.numberOfDigits' if your DTO uses that name.
         var numberFormat = $"D{request.numberOfDigits}";
 
         for (var i = 0; i < capacity; i++)

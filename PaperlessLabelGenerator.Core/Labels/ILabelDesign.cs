@@ -7,6 +7,10 @@ public interface ILabelDesign
     string FormatId { get; }
     string FormatName { get; }
 
+    // Label Dimensions
+    float LabelWidthMm { get; }
+    float LabelHeightMm { get; }
+
     // Physical Page Layout
     float PageMarginTopBottomMm { get; }
     float PageMarginSideMm { get; }
@@ -16,9 +20,8 @@ public interface ILabelDesign
     int RowsPerSheet { get; }
 
     // Spacing (The gutters)
-    float HorizontalSpacingMm { get; } // Gap between columns (e.g., 2mm)
-    float VerticalSpacingMm { get; }   // Gap between rows (e.g., 0mm)
+    float HorizontalSpacingMm { get; }
+    float VerticalSpacingMm { get; }
 
-    // Render Logic
     void ComposeLabel(IContainer container, string labelText);
 }
