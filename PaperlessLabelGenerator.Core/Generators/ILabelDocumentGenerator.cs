@@ -10,5 +10,5 @@ public interface ILabelDocumentGenerator
     /// <summary>
     /// Generates a PDF document containing labels.
     /// </summary>
-    Task<byte[]> GenerateAsync(ILabelDesign design, IEnumerable<string> labels);
+    Task<byte[]> GenerateAsync(ILabelDesign design, IEnumerable<LabelContent> labels);
 }

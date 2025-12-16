@@ -7,7 +7,7 @@ namespace PaperlessLabelGenerator.Core.Generators;
 
 public class LabelDocumentGenerator : ILabelDocumentGenerator
 {
-    public Task<byte[]> GenerateAsync(ILabelDesign design, IEnumerable<string> labels)
+    public Task<byte[]> GenerateAsync(ILabelDesign design, IEnumerable<LabelContent> labels)
     {
         return Task.Run(() =>
         {
@@ -50,13 +50,12 @@ public class LabelDocumentGenerator : ILabelDocumentGenerator
                             // 2a. Iterate Columns
                             for (var col = 0; col < design.ColumnsPerRow; col++)
                             {
-                                var labelText = index < labelList.Count ? labelList[index] : string.Empty;
+                                LabelContent content = index < labelList.Count ? labelList[index] : new LabelContent("", "");
 
                                 table.Cell().Element(cell =>
                                 {
-                                    // GENERALIZED: Use design.LabelHeightMm instead of hardcoded 10
                                     cell.Height(design.LabelHeightMm, Unit.Millimetre)
-                                        .Element(c => design.ComposeLabel(c, labelText));
+                                        .Element(c => design.ComposeLabel(c, content)); // Pass whole object
                                 });
 
                                 // Horizontal Spacer Cell

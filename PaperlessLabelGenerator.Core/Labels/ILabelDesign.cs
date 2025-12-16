@@ -23,5 +23,5 @@ public interface ILabelDesign
     float HorizontalSpacingMm { get; }
     float VerticalSpacingMm { get; }
 
-    void ComposeLabel(IContainer container, string labelText);
+    void ComposeLabel(IContainer container, LabelContent content);
 }

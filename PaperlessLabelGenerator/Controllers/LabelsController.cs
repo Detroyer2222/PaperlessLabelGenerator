@@ -27,19 +27,23 @@ public sealed class LabelsController : ControllerBase
 
         var capacity = design.ColumnsPerRow * design.RowsPerSheet;
 
-        var labels = new List<string>(capacity);
-
+        var labels = new List<LabelContent>(capacity);
         var numberFormat = $"D{request.numberOfDigits}";
 
         for (var i = 0; i < capacity; i++)
         {
             var currentNumber = request.StartingNumber + i;
-            var numericPart = currentNumber.ToString(numberFormat);
-            labels.Add($"{request.LabelPrefix}{numericPart}");
+
+            // 1. QR Data: Prefix + Raw Number (e.g. "ASN1")
+            var qrData = $"{request.LabelPrefix}{currentNumber}";
+
+            // 2. Display Text: Prefix + Padded Number (e.g. "ASN0001")
+            var displayText = $"{request.LabelPrefix}{currentNumber.ToString(numberFormat)}";
+
+            labels.Add(new LabelContent(qrData, displayText));
         }
 
         var pdfBytes = await _labelDocumentGenerator.GenerateAsync(design, labels);
-
         return File(pdfBytes, "application/pdf", $"labels-{request.LabelPrefix}.pdf");
     }
 

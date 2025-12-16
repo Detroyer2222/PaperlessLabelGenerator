@@ -18,7 +18,7 @@ public class AveryL4731LabelDesign : ILabelDesign
     public float HorizontalSpacingMm => 2.0f;
     public float VerticalSpacingMm => 0.0f;
 
-    public void ComposeLabel(IContainer container, string labelText)
+    public void ComposeLabel(IContainer container, LabelContent content)
     {
         // 1. Bigger QR (9mm fits inside 10mm height)
         const float qrSizeMm = 9f;
@@ -31,14 +31,14 @@ public class AveryL4731LabelDesign : ILabelDesign
             // QR Code (Left)
             row.AutoItem()
                 .AlignMiddle()
-                .Element(e => RenderQrCode(e, labelText, qrSizeMm));
+                .Element(e => RenderQrCode(e, content.QrData, qrSizeMm));
 
             // Text (Right)
             row.RelativeItem()
                 .AlignMiddle()
                 .AlignLeft()
                 .PaddingLeft(0.5f, Unit.Millimetre)
-                .Text(labelText ?? "")
+                .Text(content.DisplayText ?? "")
                 .FontSize(fontSize)
                 .FontColor(Colors.Black)
                 .SemiBold();
