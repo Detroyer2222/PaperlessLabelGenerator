@@ -47,20 +47,19 @@ public class AveryL4731LabelDesign : ILabelDesign
 
     private static void RenderQrCode(IContainer container, string data, float sizeMm)
     {
-        try
-        {
-            using var generator = new QRCodeGenerator();
-            using QRCodeData qrData = generator.CreateQrCode(data, QRCodeGenerator.ECCLevel.Q);
-            using var qrCode = new PngByteQRCode(qrData);
+        if (string.IsNullOrEmpty(data)) return;
 
-            container
-                .Width(sizeMm, Unit.Millimetre)
-                .Height(sizeMm, Unit.Millimetre)
-                .Image(qrCode.GetGraphic(20));
-        }
-        catch
-        {
-            container.Background(Colors.Grey.Lighten2);
-        }
+        using var generator = new QRCodeGenerator();
+        using QRCodeData qrData = generator.CreateQrCode(data, QRCodeGenerator.ECCLevel.Q);
+        using var svgQr = new SvgQRCode(qrData);
+
+        // Get SVG string. The size param usually controls width/height attributes.
+        // QuestPDF will scale the SVG to fit the container anyway.
+        var svgString = svgQr.GetGraphic(1);
+
+        container
+            .Width(sizeMm, Unit.Millimetre)
+            .Height(sizeMm, Unit.Millimetre)
+            .Svg(svgString);
     }
 }
