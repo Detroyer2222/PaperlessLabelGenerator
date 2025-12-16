@@ -1,6 +1,12 @@
+using PaperlessLabelGenerator.Core.Generators;
+using PaperlessLabelGenerator.Core.Labels;
+using QuestPDF.Infrastructure;
 using Scalar.AspNetCore;
 
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
+
+// Set QuestPDF License (Community)
+QuestPDF.Settings.License = LicenseType.Community;
 
 // Add services
 builder.Services.AddControllers();
@@ -9,6 +15,16 @@ builder.Services.AddLogging(config =>
 {
     config.AddConsole();
     config.AddDebug();
+});
+
+// In Program.cs
+builder.Services.AddScoped<ILabelDesignFactory, LabelDesignFactory>()
+    .AddScoped<ILabelDocumentGenerator, LabelDocumentGenerator>();
+
+
+builder.Services.Configure<RouteOptions>(options =>
+{
+    options.LowercaseUrls = true;
 });
 
 WebApplication app = builder.Build();
@@ -46,7 +62,6 @@ logger.LogInformation("Paperless Label Generator API started");
 logger.LogInformation("Available endpoints:");
 logger.LogInformation("  POST /api/labels - Generate labels PDF");
 logger.LogInformation("  GET /api/labels/formats - Get available label formats");
-logger.LogInformation("  GET /api/labels/example - Get example configuration");
 logger.LogInformation("API documentation at: http://localhost:8080/ or http://localhost:8081/");
 logger.LogInformation("OpenAPI schema at: http://localhost:8080/openapi/v1.json or http://localhost:8081/openapi/v1.json");
 

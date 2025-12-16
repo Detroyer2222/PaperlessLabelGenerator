@@ -1,53 +1,57 @@
-﻿namespace PaperlessLabelGenerator.Core.Labels;
+﻿using PaperlessLabelGenerator.Core.Labels.ConcreteDesigns;
+
+namespace PaperlessLabelGenerator.Core.Labels;
 
 /// <summary>
-/// Factory for creating label design instances
-/// Manages all available label formats and their instantiation
+/// Factory for creating label design instances based on the LabelFormat enum.
 /// </summary>
-public class LabelDesignFactory
+public class LabelDesignFactory : ILabelDesignFactory
 {
-    private static readonly Dictionary<string, Func<ILabelDesign>> LabelDesigns =
-        new(StringComparer.OrdinalIgnoreCase)
-        {
-            { "avery-l4731", () => new AveryL4731LabelDesign() },
-            // Future label formats can be added here easily
-            // { "avery-l7651", () => new AveryL7651LabelDesign() },
-            // { "custom-format", () => new CustomLabelDesign() },
-        };
-
     /// <summary>
-    /// Create a label design instance by format ID
+    /// Creates a label design instance for the specified format.
     /// </summary>
-    /// <param name="formatId">The format identifier (e.g., "avery-l4731")</param>
-    /// <returns>An instance implementing ILabelDesign</returns>
-    /// <exception cref="ArgumentException">If format ID is not found</exception>
-    public static ILabelDesign CreateLabelDesign(string formatId)
+    /// <param name="format">The label format enum value.</param>
+    /// <returns>An instance implementing ILabelDesign.</returns>
+    /// <exception cref="ArgumentOutOfRangeException">If the format is not supported.</exception>
+    public ILabelDesign Create(LabelFormat format)
     {
-        if (string.IsNullOrWhiteSpace(formatId))
-            throw new ArgumentException("Format ID cannot be null or empty", nameof(formatId));
+        // Use a switch expression for clean, type-safe mapping from enum to instance
+        return format switch
+        {
+            LabelFormat.AveryL4731 => new AveryL4731LabelDesign(),
 
-        if (LabelDesigns.TryGetValue(formatId, out Func<ILabelDesign>? factory))
-            return factory();
+            // Future label formats can be added here easily.
+            // For example:
+            // LabelFormat.AveryL7651 => new AveryL7651LabelDesign(),
 
-        throw new ArgumentException(
-            $"Label format '{formatId}' is not supported. Available formats: {string.Join(", ", LabelDesigns.Keys)}",
-            nameof(formatId));
+            // The underscore is a catch-all for any unsupported enum values
+            _ => throw new ArgumentOutOfRangeException(nameof(format), format, "Unsupported label format.")
+        };
     }
 
     /// <summary>
-    /// Get all available label format IDs
+    /// Gets all available label format enum values.
     /// </summary>
-    public static IEnumerable<string> GetAvailableFormats() => LabelDesigns.Keys;
+    /// <returns>An enumerable of all supported LabelFormat values.</returns>
+    public IEnumerable<LabelFormat> GetAvailableFormats()
+    {
+        // This dynamically returns all defined values in the enum.
+        // If you add a new format to the enum, it's automatically included here.
+        return Enum.GetValues<LabelFormat>();
+    }
 
     /// <summary>
-    /// Get all available label formats with their details
+    /// Gets all available label formats with their friendly names.
     /// </summary>
-    public static IEnumerable<(string Id, string Name)> GetAvailableFormatsWithNames()
+    /// <returns>An enumerable of tuples containing the format enum and its name.</returns>
+    public IEnumerable<(LabelFormat Format, string Name)> GetAvailableFormatsWithNames()
     {
-        return LabelDesigns.Keys.Select(id =>
+        // Iterate over all available enum values, create a temporary instance for each,
+        // and get its friendly name.
+        return GetAvailableFormats().Select(format =>
         {
-            ILabelDesign design = CreateLabelDesign(id);
-            return (id, design.FormatName);
+            ILabelDesign design = Create(format);
+            return (Format: format, design.FormatName);
         });
     }
 }
