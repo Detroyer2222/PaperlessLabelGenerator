@@ -1,0 +1,6 @@
+@PaperlessLabelGenerator_HostAddress = http://localhost:5073
+
+GET {{PaperlessLabelGenerator_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

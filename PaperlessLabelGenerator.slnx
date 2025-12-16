@@ -1,0 +1,5 @@
+<Solution>
+  <Project Path="PaperlessLabelGenerator.Core/PaperlessLabelGenerator.Core.csproj" />
+  <Project Path="PaperlessLabelGenerator.Tests/PaperlessLabelGenerator.Tests.csproj" />
+  <Project Path="PaperlessLabelGenerator/PaperlessLabelGenerator.csproj" />
+</Solution>
