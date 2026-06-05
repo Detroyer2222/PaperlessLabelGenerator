@@ -1,0 +1,15 @@
+<Project Sdk="Aspire.AppHost.Sdk/13.4.2">
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\Api\PaperlessLabelGenerator.csproj" />
+  </ItemGroup>
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net10.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <UserSecretsId>79e335d3-ab18-43c9-af6c-f56f9d7aaef9</UserSecretsId>
+  </PropertyGroup>
+
+</Project>

@@ -1,5 +1,7 @@
 <Solution>
-  <Project Path="PaperlessLabelGenerator.Core/PaperlessLabelGenerator.Core.csproj" />
-  <Project Path="PaperlessLabelGenerator.Tests/PaperlessLabelGenerator.Tests.csproj" />
-  <Project Path="PaperlessLabelGenerator/PaperlessLabelGenerator.csproj" />
+  <Project Path="src/Aspire/AppHost/PaperlessLabelGenerator.AppHost.csproj" />
+  <Project Path="src/Aspire/ServiceDefaults/PaperlessLabelGenerator.ServiceDefaults.csproj" />
+  <Project Path="src/Api/PaperlessLabelGenerator.csproj" />
+  <Project Path="src/Core/PaperlessLabelGenerator.Core.csproj" />
+  <Project Path="tests/Tests/PaperlessLabelGenerator.Tests.csproj" />
 </Solution>
